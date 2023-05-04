@@ -11,7 +11,7 @@ http.createServer((req, res) => {
         console.log(fileArr)
 
         let html = "<ul>";
-        fileArr.forEach((value, index) => {
+        fileArr.forEach((value) => {
             html += "<li>"
             html += `<a href="${publicDIR + "/" + value}">${value}</a>`
             html += "</li>"
