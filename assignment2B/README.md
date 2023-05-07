@@ -40,10 +40,10 @@
     FROM node
 
     # set working directory
-    WORKDIR /
+    WORKDIR /app
 
     # copy code
-    COPY . /
+    COPY . /app
 
     # install dependencies
     RUN npm install
