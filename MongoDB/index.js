@@ -1,6 +1,8 @@
 const express = require("express")
 const dbConnect = require("./mongoConnect")
 const Product = require("./Product");
+const User = require("./User.js")
+const bcrypt = require("bcrypt")
 const app = express();
 
 app.use(express.json());
@@ -38,6 +40,28 @@ app.delete("/", async (req, res) => {
 
     const ack = await Product.deleteOne({ _id: _id })
     res.send(ack);
+})
+
+app.post("/authentication/login", async (req, res)=>{
+    const username = req.body.username;
+    const password = req.body.password;
+
+    const user = await User.findOne({username:username})
+    
+    console.log(user);
+    const passwordHash = user.password;
+
+    console.log(password, passwordHash);
+    const verified = await bcrypt.compare(password, passwordHash)
+
+    res.send(verified);
+})
+app.post("/authentication/signup", async (req, res)=>{
+    const username = req.body.username;
+    const password = req.body.password;
+
+    const user = await User.create({username:username, password:password})
+    res.send(user)
 })
 
 

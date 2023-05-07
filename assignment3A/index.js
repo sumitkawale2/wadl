@@ -4,13 +4,42 @@ const mime = require('mime');
 
 const PORT = 1900;
 
+// styling is not important for this practical
+// styling is optional
+let style = `
+    <style>
+        h2{
+            text-align:center;
+            margin-top:5rem;
+        }
+        ul{
+            list-style:none;
+            width:50vw;
+            margin:2rem auto;
+        }
+        li a{
+            text-decoration:none;
+            color:blue;
+            display:block;
+            background:#eaeaef;
+            padding:1rem;
+            border-radius:5px;
+            margin:.5rem;
+            font-size:1.2rem;
+        }
+        li a:hover {
+            background:#ddddee;
+        }
+    </style>
+`;
+
 http.createServer((req, res) => {
     if (req.url == "/") {
         const publicDIR = "./public";
         const fileArr = fs.readdirSync(publicDIR)
         console.log(fileArr)
 
-        let html = "<ul>";
+        let html = style + "<h2>Available Files</h2><ul>";
         fileArr.forEach((value) => {
             html += "<li>"
             html += `<a href="${publicDIR + "/" + value}">${value}</a>`

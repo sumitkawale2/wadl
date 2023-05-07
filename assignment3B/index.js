@@ -1,30 +1,36 @@
-const express = require("express");
-const bodyParser = require("body-parser");
+const express = require("express")
+const db_connect = require("./database")
+const Product = require("./models/Product")
+
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.use(bodyParser.json());
-const UserRoute = require("./userRouter");
-app.use("/user", UserRoute);
+app.get("/product", async (req, res) => {
+    const products = await Product.find();
+    res.send(products)
+})
 
-const dbConfig = require("./config/database.config.js");
-const mongoose = require("mongoose");
-mongoose.Promise = global.Promise;
+app.post("/product", async (req, res) => {
+    const product = await Product.create(req.body);
+    // if successfull creation of data, it will return new created data object i.e product
+    res.send(product)
+})
 
-mongoose
-    .connect(dbConfig.url, {
-        useNewUrlParser: true,
+app.patch("/product", async function (req, res) {
+    const { _id, name, price } = req.body
+    // const product = await Product.updateOne({ _id }, { name, price }, { new: true })
+    const product = await Product.findOneAndUpdate({ _id }, { name, price }, { new: true })
+    //                                             where       update data       //optional (returns newly updated data)
+    res.send(product);
+})
+
+app.delete("/product", async function (req, res) {
+    const product = await Product.deleteOne(req.body)
+    res.send(product);
+})
+
+db_connect.then(() => {
+    app.listen(4000, () => {
+        console.log("http://localhost:4000")
     })
-    .then(() => {
-        console.log("Database Connected Successfully!!");
-    })
-    .catch((err) => {
-        console.log("Could not connect to the database", err);
-        process.exit();
-    });
-app.get("/", (req, res) => {
-    res.json({ message: "Hello Crud Node Express" });
-});
-app.listen(3000, () => {
-    console.log("Server is listening on port 3000");
-});
+}).catch(error => console.log(error))
