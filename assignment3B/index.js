@@ -3,6 +3,8 @@ const db_connect = require("./database")
 const Product = require("./models/Product")
 
 const app = express();
+app.use("/public", express.static("./public"))
+
 app.use(express.json());
 
 app.get("/product", async (req, res) => {
